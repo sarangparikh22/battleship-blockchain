@@ -11,9 +11,11 @@ function startConnection() {
     // Listen for messages
     socket.addEventListener('message', function (event) {
         console.log('Message from server ', event.data);
-        document.getElementById("chatWindow").appendChild(`<p>User2: ${event.data}</p>`);
+        const msgNode = document.createElement("p");
+        const msgText = document.createTextNode(`User: ${event.data}`);
+        msgNode.appendChild(msgText);
+        document.getElementById("chatWindow").appendChild(msgNode);
     });
-
     return socket;
 }
 
@@ -23,5 +25,7 @@ function sendMsg() {
     const msg = document.getElementById("chatBox").value;
     socket.send(msg);
     const msgNode = document.createElement("p");
+    const msgText = document.createTextNode(`Me: ${msg}`);
+    msgNode.appendChild(msgText);
     document.getElementById("chatWindow").appendChild(msgNode);
 }
