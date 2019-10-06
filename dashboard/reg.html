@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>nuAztec</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png" />
+	<link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+
+	<!-- CSS Files -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/css/material-bootstrap-wizard.css" rel="stylesheet" />
+
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link href="assets/css/demo.css" rel="stylesheet" />
+	
+	<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-database.js"></script>
+	<script src="assets/js/reg.js"></script>
+
+</head>
+
+<body>
+	<div class="image-container set-full-height" style=" background-image: linear-gradient(to bottom, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #909be3, #869be5, #7a9ce7, #7393e6, #6d8ae5, #6880e3, #6576e1);">
+	    <!--   Creative Tim Branding   -->
+	    <a href="http://creative-tim.com">
+	         <div class="logo-container">
+	            <div class="logo">
+	                <img src="assets/img/logo.png">
+	            </div>
+	            <div class="brand">
+	                nuAztec Selective ZKP
+	            </div>
+	        </div>
+	    </a>
+
+		
+
+	    <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-8 col-sm-offset-2">
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+		                <div class="card wizard-card" data-color="red" id="wizard">
+		                    <form action="" method="">
+		                <!--        You can switch " data-color="blue" "  with one of the next bright colors: "green", "orange", "red", "purple"             -->
+
+		                    	<div class="wizard-header">
+									<img src="assets/img/logo.png" height="200" width="200">
+									<h3 class="wizard-title">
+										nuAztec
+									</h3>
+		                        	<h3 class="wizard-title">
+		                        		
+		                        	</h3>
+									<h5>Send Aztec Based ERC-20 Token with Selective Privacy</h5>
+		                    	</div>
+								<div class="wizard-navigation">
+									<ul>
+			                            <li><a href="#details" data-toggle="tab">Income Tax Regulator Officer</a></li>
+			                            <!-- <li><a href="#captain" data-toggle="tab">Room Type</a></li> -->
+			                            <li><a href="#description" data-toggle="tab">Role Based Access Control (RBAC)</a></li>
+			                        </ul>
+								</div>
+
+		                        <div class="tab-content">
+		                            <div class="tab-pane" id="details">
+		                            	<div class="row">
+			                            	<div class="col-sm-12">
+			                                	<h4 class="info-text">Click View to see the Private Amount</h4>
+			                            	</div>
+										</div>
+										<div id="cardsHere"> 
+											
+											
+										</div>
+		                            </div>
+		                            <div class="tab-pane" id="description">
+		                                <div class="row">
+		                                    <h4 class="info-text">Defined Roles</h4>
+		                                    <div class="col-sm-6 col-sm-offset-1">
+												<form name="myForm">
+												<div class="radio">
+													<label>
+														<input type="radio" id="CEO" name="optionsRadios" value="CEO">
+														CEO
+													</label>
+												</div>
+												<div class="radio">
+													<label>
+														<input type="radio" id="HR" name="optionsRadios" value="HR">
+														Human Resource
+													</label>
+												</div>
+												<div class="radio">
+													<label>
+														<input type="radio" id="EMP" name="optionsRadios" value="EMP">
+														Employee
+													</label>
+												</div>
+											</div>
+											<input class="btn btn-success" type="button" onclick="setRole()" value="Set Role" />
+											</form>
+											<div class="row">
+												<div class="clearfix"></div>
+											<div>
+												<div id="cardsHereToo"> 
+													
+												</div>
+											</div>
+											</div>
+										</div>
+									</div>
+									
+		                        </div>
+	                        	<div class="wizard-footer">
+	                            	<div class="pull-right">
+	                                    <!-- <input type='button' class='btn btn-next btn-fill btn-danger btn-wd' name='next' value='Next' />
+	                                    <input type='button' class='btn btn-finish btn-fill btn-danger btn-wd' name='finish' value='Finish' /> -->
+	                                </div>
+	                                <div class="pull-left">
+	                                    <!-- <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' /> -->
+
+										<div class="footer-checkbox">
+											<div class="col-sm-12">
+											  <!-- <div class="checkbox">
+												  <label>
+													  <input type="checkbox" name="optionsCheckboxes">
+												  </label>
+												  Subscribe to our newsletter
+											  </div> -->
+										  </div>
+										</div>
+	                                </div>
+	                                <div class="clearfix"></div>
+	                        	</div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	    	</div> <!-- row -->
+		</div> <!--  big container -->
+
+	    <div class="footer">
+	        <div class="container text-center">
+	             Made with <i class="fa fa-heart heart"></i> by Team nuAztec. Source <a href="https://github.com/mankenavenkatesh/Selective-ZKP">here.</a>
+	        </div>
+	    </div>
+	</div>
+
+</body>
+	<!--   Core JS Files   -->
+	<script src="assets/js/jquery-2.2.4.min.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="assets/js/jquery.bootstrap.js" type="text/javascript"></script>
+
+	<!--  Plugin for the Wizard -->
+	<script src="assets/js/material-bootstrap-wizard.js"></script>
+
+	<!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
+	<script src="assets/js/jquery.validate.min.js"></script>
+</html>
