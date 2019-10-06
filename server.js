@@ -1,6 +1,7 @@
 const express = require('express');
 
 const dep = require('./deployContract');
+const bifrostWrapper = require("./bifrostWS");
 
 const app = express();
 
@@ -17,7 +18,6 @@ app.get('/saru',(req,res) => {
         res.send(tx);
     })
 })
-
 
 app.listen(3000, () => {
     console.log(`Server at you know where`);

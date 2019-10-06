@@ -22,4 +22,6 @@ const socket = startConnection();
 function sendMsg() {
     const msg = document.getElementById("chatBox").value;
     socket.send(msg);
+    // insertAdjacentElement()
+    document.getElementById("chatWindow").append(`User1: ${msg}<br>`);
 }
