@@ -11,10 +11,10 @@ server.on('error', (err) => {
 });
 
 server.on('message', (msg, rinfo) => {
-    console.log("message received", msg);
+    console.log("message received", msg.toString());
     wss.clients.forEach(function each(client) {
         if(client.readyState === WebSocket.OPEN) {
-            client.send(msg);
+            client.send(msg.toString());
         }
     });
 });

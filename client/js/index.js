@@ -1,4 +1,4 @@
-var web3 = new Web3("ws://localhost:8545");
+var web3 = new Web3("wss://testnet2.matic.network");
 
 let shipHashLocationP1 = [];
 let shipLocationP1 = [];
@@ -9,6 +9,9 @@ let shipLocationP2 = [];
 let p1 = "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1";
 let p2 = "0xffcf8fdee72ac11b5c542428b35eef5769c409f0";
 
+let privKeys = {};
+privKeys[p1] = "4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d";
+privKeys[p2] = "6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1";
 
 // let contractAddress = "0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab";
 
@@ -264,27 +267,45 @@ let contractABI = [
 ];
 
 let myContract;
-function payP1(){
-    myContract = new web3.eth.Contract(contractABI, contractAddress);
-    web3.eth.getAccounts((err,accounts) => {
-        if(err){
-            console.log(err)
-        }
-        myContract.methods.stake().send({from: accounts[0], value: web3.utils.toWei('1', 'ether')})
-    })
+
+async function signTx(callData, to, value, fromAddress) {
+	const nonce = await web3.eth.getTransactionCount(fromAddress);
+	console.log(nonce);
+	const tx = new ethereumjs.Tx({
+		nonce,
+		gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'gwei')),
+		gasLimit: 300000,
+		to,
+		value: web3.utils.toHex(web3.utils.toWei(value+"", 'ether')),
+		// value: 0,
+		data: callData
+	});
+	tx.sign(ethereumjs.Buffer.Buffer.from(privKeys[fromAddress], 'hex'));
+	const rawTx = `0x${tx.serialize().toString('hex')}`;
+	return rawTx;
 }
 
-function payP2(){
-    myContract = new web3.eth.Contract(contractABI, contractAddress);
-    web3.eth.getAccounts((err,accounts) => {
-        if(err){
-            console.log(err)
-        }
-        myContract.methods.stake().send({from: accounts[1], value: web3.utils.toWei('1', 'ether')})
-    })  
+async function broadcastTx(rawTx) {
+	return new Promise((resolve, reject) => {
+		web3.eth.sendSignedTransaction(rawTx, console.log).on('receipt', resolve);
+	});
 }
 
+async function payP1(){
+    let myContract = new web3.eth.Contract(contractABI, contractAddress);
+	const dataValue = myContract.methods.stake().encodeABI();
+	const signedTx = await signTx(dataValue, contractAddress, 1, p1);
+	console.log(signedTx);
+	const receipt = await broadcastTx(signedTx);
+}
 
+async function payP2(){
+    myContract = new web3.eth.Contract(contractABI, contractAddress);
+    const dataValue = myContract.methods.stake().encodeABI();
+	const signedTx = await signTx(dataValue, contractAddress, 1, p2);
+	console.log(signedTx);
+	const receipt = await broadcastTx(signedTx);
+}
 
 // myContract.methods.contractBalance().call().then((bal) => {
 //     console.log(bal);
@@ -329,7 +350,8 @@ function setShipPositionAndGetHashP1(s1,s2,s3){
         }
     }
     document.getElementById('p1T').innerHTML = `<table  cellspacing="500">${tableData}</table>`
-    console.log(JSON.stringify(shipHashLocationP1));
+	console.log(JSON.stringify(shipHashLocationP1));
+	document.getElementById('p1L').value = JSON.stringify(shipHashLocationP1);
     console.log('------------------------------');
     console.log(shipLocationP1);
     let partyData = "";
@@ -384,7 +406,8 @@ function setShipPositionAndGetHashP2(s1,s2,s3){
         }
     }
     document.getElementById('p2T').innerHTML = `<table  cellspacing="500">${tableData}</table>`
-    console.log(JSON.stringify(shipHashLocationP2));
+	console.log(JSON.stringify(shipHashLocationP2));
+	document.getElementById('p2L').value = JSON.stringify(shipHashLocationP2);
     console.log('------------------------------');
     console.log(shipLocationP2);
     let partyData = "";
@@ -433,8 +456,8 @@ function doCall(theUrl, callback)
 
 function startTurnCheckP1(){
     myContract = new web3.eth.Contract(contractABI, contractAddress);
-    web3.eth.getAccounts((err,accounts) => {
-        myContract.methods.canPlay().call({from: accounts[0]})
+    // web3.eth.getAccounts((err,accounts) => {
+        myContract.methods.canPlay().call({from: p1})
         .then(res => {
             // console.log(res);
             if(res == false){
@@ -458,12 +481,12 @@ function startTurnCheckP1(){
                 }
             }
         })
-    })
+    // })
 }
 function startTurnCheckP2(){
     myContract = new web3.eth.Contract(contractABI, contractAddress);
-    web3.eth.getAccounts((err,accounts) => {
-        myContract.methods.canPlay().call({from: accounts[1]})
+    // web3.eth.getAccounts((err,accounts) => {
+        myContract.methods.canPlay().call({from: p2})
         .then(res => {
             // console.log(res);
             if(res == false){
@@ -486,53 +509,52 @@ function startTurnCheckP2(){
                 }
             }
         })
-    })
+    // })
 }
 
-function attackByP1(cell){
-    let loc = cell.split('p1')[1];
-    myContract = new web3.eth.Contract(contractABI, contractAddress);
-    web3.eth.getAccounts((err, accounts) => {
-        myContract.methods.play(loc).send({from: accounts[0]})
-        .then(res => {
-            myContract.methods.reveal(Math.floor((shipLocationP2[loc] / 10)).toString(), Math.floor((shipLocationP2[loc] % 10)).toString()).send({from: accounts[1], gas: 300000})
-            .then(r => {
-                myContract.methods.canPlay().call({from: accounts[1]}).then(res => {
-                    if(res == true){
-                        document.getElementById("p2O"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
-                        document.getElementById("p1"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
+async function attackByP1(cell) {
+	let loc = cell.split('p1')[1];
+	let myContract = new web3.eth.Contract(contractABI, contractAddress);
+	const dataValue = myContract.methods.play(loc).encodeABI();
+	const signedTx = await signTx(dataValue, contractAddress, 0, p1);
+	console.log(signedTx);
+	const receipt = await broadcastTx(signedTx);
+	const dataValue2 = myContract.methods.reveal(Math.floor((shipLocationP2[loc] / 10)).toString(), Math.floor((shipLocationP2[loc] % 10)).toString()).encodeABI();
+	const signedTx2 = await signTx(dataValue2, contractAddress, 0, p2);
+	console.log(signedTx2);
+	const receipt2 = await broadcastTx(signedTx2);
+	myContract.methods.canPlay().call({from: p2}).then(res => {
+		if(res == true){
+			document.getElementById("p2O"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
+			document.getElementById("p1"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
 
-                    }else{
-                        document.getElementById("p2O"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
-                        document.getElementById("p1"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
+		}else{
+			document.getElementById("p2O"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
+			document.getElementById("p1"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
 
-                    }
-                })
-            })
-        })
-    })
+		}
+	})
 }
 
-function attackByP2(cell){
-    let loc = cell.split('p2')[1];
-    myContract = new web3.eth.Contract(contractABI, contractAddress);
-    web3.eth.getAccounts((err, accounts) => {
-        myContract.methods.play(loc).send({from: accounts[1]})
-        .then(res => {
-            myContract.methods.reveal(Math.floor((shipLocationP1[loc] / 10)).toString(), Math.floor((shipLocationP1[loc] % 10)).toString()).send({from: accounts[0], gas: 300000})
-            .then(r => {
-                myContract.methods.canPlay().call({from: accounts[0]}).then(res => {
-                    if(res == true){
-                        document.getElementById("p1O"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
-                        document.getElementById("p2"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
+async function attackByP2(cell) {
+	let loc = cell.split('p2')[1];
+	let myContract = new web3.eth.Contract(contractABI, contractAddress);
+	const dataValue = myContract.methods.play(loc).encodeABI();
+	const signedTx = await signTx(dataValue, contractAddress, 0, p2);
+	console.log(signedTx);
+	const receipt = await broadcastTx(signedTx);
+	const dataValue2 = myContract.methods.reveal(Math.floor((shipLocationP1[loc] / 10)).toString(), Math.floor((shipLocationP1[loc] % 10)).toString()).encodeABI();
+	const signedTx2 = await signTx(dataValue2, contractAddress, 0, p1);
+	console.log(signedTx2);
+	const receipt2 = await broadcastTx(signedTx2);
+	myContract.methods.canPlay().call({from: p1}).then(res => {
+		if(res == true){
+			document.getElementById("p1O"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
+			document.getElementById("p2"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
 
-                    }else{
-                        document.getElementById("p1O"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
-                        document.getElementById("p2"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
-
-                    }
-                })
-            })
-        })
-    })
+		}else{
+			document.getElementById("p1O"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
+			document.getElementById("p2"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
+		}
+	})
 }
