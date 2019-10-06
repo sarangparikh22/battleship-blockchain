@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Battleship on Blockchain</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.js"></script>
+    <script src="./js/index.js"></script>
+    <style>
+        table, th, td {
+        padding: 10px;
+        border: 1px solid black; 
+        border-collapse: collapse;
+        }
+        .test {
+        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+        filter: grayscale(100%);
+        -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+        filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <h1>Deploy Contract</h1>
+    <input type="text" id="p1" value="0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1"><br>
+    <input type="text" id="p2" value="0xffcf8fdee72ac11b5c542428b35eef5769c409f0"><br>
+    <input type="text" id="p1L" placeholder="Location Hash of Player 1"><br>
+    <input type="text" id="p2L" placeholder="Location Hash of Player 2"><br><br>
+    <button onclick="deploy()">Deploy Contract</button><br><br>
+    <input type="text" id="shipPos" placeholder="For P1">
+    <button onclick="setGridP1()">Randomize</button>
+    <input type="text" id="shipPosP2" placeholder="For P2">
+    <button onclick="setGridP2()">Randomize</button>
+    <h1>Player 1 Screen</h1>
+    <div id="p1T"></div>
+    <div id="p1C" style="margin-top:10px"></div>
+    <h1>Player 2 Screen</h1>
+    <div id="p2T"></div>
+    <div id="p2C" style="margin-top:10px"></div>
+</body>
+</html>
