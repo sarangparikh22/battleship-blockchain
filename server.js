@@ -10,6 +10,8 @@ app.all('/*', function(req, res, next) {
     next();
 });
 
+app.use(express.static('chat'));
+
 app.get('/saru',(req,res) => {
     dep.deployContract(req.query.p1,req.query.p2,req.query.p1L,req.query.p2L, (tx) => {
         res.send(tx);
