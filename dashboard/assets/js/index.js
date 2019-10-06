@@ -9,6 +9,8 @@ let shipLocationP2 = [];
 let p1 = "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1";
 let p2 = "0xffcf8fdee72ac11b5c542428b35eef5769c409f0";
 
+let sDp1 = 0;
+let sDp2 = 0;
 
 // let contractAddress = "0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab";
 
@@ -331,7 +333,8 @@ function setShipPositionAndGetHashP1(s1,s2,s3){
     document.getElementById('p1T').innerHTML = `<table  cellspacing="500">${tableData}</table>`
     console.log(JSON.stringify(shipHashLocationP1));
     console.log('------------------------------');
-    console.log(shipLocationP1);
+	console.log(shipLocationP1);
+	document.getElementById('p1L').value = JSON.stringify(shipHashLocationP1);
     let partyData = "";
     for (let i = 0; i < 16; i++) {
         let lI = i;
@@ -386,7 +389,9 @@ function setShipPositionAndGetHashP2(s1,s2,s3){
     document.getElementById('p2T').innerHTML = `<table  cellspacing="500">${tableData}</table>`
     console.log(JSON.stringify(shipHashLocationP2));
     console.log('------------------------------');
-    console.log(shipLocationP2);
+	console.log(shipLocationP2);
+	document.getElementById('p2L').value = JSON.stringify(shipHashLocationP2);
+
     let partyData = "";
     for (let i = 0; i < 16; i++) {
         let lI = i;
@@ -414,7 +419,9 @@ function deploy(){
     doCall(url, (cA) => {
         setInterval(startTurnCheckP1, 500);
         setInterval(startTurnCheckP2, 500); 
-        console.log(cA);
+		console.log(cA);
+		payP1();
+		payP2();
     });
     // setInterval(startTurnCheckP1, 500);
 }
@@ -503,9 +510,12 @@ function attackByP1(cell){
                         document.getElementById("p1"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
 
                     }else{
+						sDp1 +=1;
                         document.getElementById("p2O"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
                         document.getElementById("p1"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
-
+						if(sDp1 > 2){
+							alert('Congratulations! You have won!')
+						}
                     }
                 })
             })
@@ -527,9 +537,12 @@ function attackByP2(cell){
                         document.getElementById("p2"+loc).innerHTML = '<img src="lol.gif" height="100" width="100">';
 
                     }else{
+						sDp2 += 1;
                         document.getElementById("p1O"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
                         document.getElementById("p2"+loc).innerHTML = '<img src="win.gif" height="100" width="100">';
-
+						if(sDp2 > 2){
+							alert('Congratulations! You Won!');
+						}
                     }
                 })
             })

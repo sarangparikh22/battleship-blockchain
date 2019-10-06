@@ -1,7 +1,7 @@
 const express = require('express');
 
 const dep = require('./deployContract');
-const bifrostWrapper = require("./bifrostWS");
+// const bifrostWrapper = require("./bifrostWS");
 
 const app = express();
 
@@ -11,7 +11,7 @@ app.all('/*', function(req, res, next) {
     next();
 });
 
-app.use(express.static('chat'));
+// app.use(express.static('chat'));
 
 app.get('/saru',(req,res) => {
     dep.deployContract(req.query.p1,req.query.p2,req.query.p1L,req.query.p2L, (tx) => {
